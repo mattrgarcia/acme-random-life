@@ -72,11 +72,11 @@
         );
       }
 
-      const Vacations = ({ vacations })=> {
+      const Vacations = ({ vacations, createVacation })=> {
         return(
           <div>
             Vacations ({ vacations.length })
-            <button>Add Random Vacation</button>
+            <button onClick={ createVacation }>Add Random Vacation</button>
             <ul>
               {
                 vacations.map(vac =>
@@ -103,6 +103,7 @@
             error: ''
           };
           this.createNote = this.createNote.bind(this);
+          this.createVacation = this.createVacation.bind(this);
         }
         async componentDidMount(){
           const user = await fetchUser();
@@ -118,14 +119,21 @@
         async createNote(){
           const text = faker.lorem.text();
           const note = {archived: false, text: text}
-          const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, note)).data
+          const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, note)).data;
 
-          this.setState({ notes: [...this.state.notes, created ] });
+          this.setState({ notes: [...this.state.notes, created ]});
+        }
+        async createVacation(){
+          const startDate = faker.date.past();
+          const endDate = faker.date.future();
+          const vacation = {startDate: startDate, endDate: endDate };
+          const created = (await axios.post(`${API}/users/${this.state.user.id}/vacations`, vacation)).data;
 
+          this.setState({ vacations: [...this.state.vacations, created ]})
         }
         render(){
           const { error, user, companies, vacations, followingCompanies, notes } = this.state;
-          const { createNote } = this;
+          const { createNote, createVacation } = this;
           return (
             <div>
               <h1>The Acme Random Life</h1>
@@ -133,7 +141,7 @@
               <div className='error'>{ error }</div>
               <Notes notes={ notes } createNote={ createNote } />
               <FollowingCompanies followingCompanies={ followingCompanies } companies={ companies } />
-              <Vacations vacations={ vacations } />
+              <Vacations vacations={ vacations } createVacation={ createVacation } />
             </div>
           );
         }
