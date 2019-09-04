@@ -34,17 +34,17 @@
         return  user;
       };
 
-      const Notes = ({ notes })=> {
+      const Notes = ({ notes, createNote })=> {
         return (
           <div>
             Notes ({ notes.length })
-            <button>Add Random Note</button>
+            <button onClick={ createNote }>Add Random Note</button>
             <ul>
               {
                 notes.map(note=>
                 <li key={ note.id }>
                 { note.text}
-                <button>Destroy</button>
+                <button >Destroy</button>
                 </li>
                 )
               }
@@ -102,6 +102,7 @@
             followingCompanies: [],
             error: ''
           };
+          this.createNote = this.createNote.bind(this);
         }
         async componentDidMount(){
           const user = await fetchUser();
@@ -113,14 +114,25 @@
             user, notes, vacations, companies, followingCompanies
           });
         }
+
+        async createNote(){
+          const text = faker.lorem.text();
+          const note = {archived: false, text: text}
+          const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, note)).data
+          const notes = [...notes, created]
+
+          this.setState({ user, notes });
+
+        }
         render(){
           const { error, user, companies, vacations, followingCompanies, notes } = this.state;
+          const { createNote } = this;
           return (
             <div>
               <h1>The Acme Random Life</h1>
               Welcome { user.fullName } to your Random Life!
               <div className='error'>{ error }</div>
-              <Notes notes={ notes } />
+              <Notes notes={ notes } createNote={ createNote } />
               <FollowingCompanies followingCompanies={ followingCompanies } companies={ companies } />
               <Vacations vacations={ vacations } />
             </div>
