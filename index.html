@@ -119,9 +119,8 @@
           const text = faker.lorem.text();
           const note = {archived: false, text: text}
           const created = (await axios.post(`${API}/users/${this.state.user.id}/notes`, note)).data
-          const notes = [...notes, created]
 
-          this.setState({ user, notes });
+          this.setState({ notes: [...this.state.notes, created ] });
 
         }
         render(){
