@@ -55,6 +55,7 @@
 
       const FollowingCompanies = ({ followingCompanies, companies })=> {
         return(
+          //TODO: ADD MAP AND FILTER FUNCTION TO DISPLAY COMPANIES WITH MATCHING IDS IN FOLLOWING COMPANIES
           <div>
             Following Companies ({ followingCompanies.length })
             <button>Add Random Company</button>
@@ -131,6 +132,9 @@
 
           this.setState({ vacations: [...this.state.vacations, created ]})
         }
+        //TODO: ADD CREATE COMPANY
+        //TODO: ADD DESTROY FUNCTION
+
         render(){
           const { error, user, companies, vacations, followingCompanies, notes } = this.state;
           const { createNote, createVacation } = this;
